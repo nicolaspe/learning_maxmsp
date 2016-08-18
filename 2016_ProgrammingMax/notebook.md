@@ -56,10 +56,26 @@ New objects + input messages for audio files in Max:
 - `jit.pwindow` displays a jit video
 - `jit.window` same, but in a different window (to be able to display it externally)
 - `jit.qt.grab` (`jit.grab`)  to get video from the camera. Needs `open` command to start, and `bang`s (or a `metro`nome) to grab a frame
-- `jit.xfade` to cross between two files and control with `xfade` message. To fade to black, just xfade to nothing
+- `jit.xfade` to cross between two files and control with `xfade` message. To fade to black, just xfade with nothing
 
 ### **MIDI** objects
 It doesn't use *signals*! MIDI is composed just from numbers. And once it goes out to the decoder, it belongs to a different piece of software, it's not Max's issue anymore.
 - `noteout` output MIDI messages. Mac and Windows have MIDI output decoders.
 - `pgmode` program change "program out", it changes the tone of the MIDI decoder. See [Wikipedia General MIDI page](https://en.wikipedia.org/wiki/General_MIDI) to see the different instruments.
 - `makenote` receives the note number and sends it with an specified *velocity* and *duration* in ms
+
+## Session 3, What's Really Going on Inside Max
+
+Signal patch cords can show you the value they are currently carrying by turning on `Debug > Probing` and hovering the mouse. They are **always** carrying data.
+
+Sound travels through air (or matter) as a difference of air *pressure*. When converted to electric signals, it becomes a difference in *voltage*. The pressure and voltage curves are exactly the same, but as it is converted to *digital* data, it has to be **sampled**, as the computer cannot deal with infinite data. The sample rate used comes from the era of Music CDs and is 44.1 kHz. And the bit depth represents how many different values you can have. Max uses a 16 bit depth (2^16 possible values), that also comes from the CD standard.
+
+- Multiplying (`*~`) two simple `cycle` signals = *ring modulation synthesis*
+- *Logic Events* only happen once and don't come in an specific moment (in relation with other objects, as with signals)
+- `methods` listen to the output of objects.
+
+Max MSP detects logical loops and just "discards them" > *stack overflow*. It can be seen as a directed graph*, has to be an Acyclic Directed Graph, which uses topological sorting to order it. Every time a new patch cord is added, MSP has to take a moment to reorder the patch to play it in the correct sequence.
+
+Objects' output is used immediately (like with a `select` object) or can schedule an event in time (`makenote` or `metro` objects) by giving a message to the *Max Scheduler*. If it schedules something in time, it will complete it's "mission" before receiving a new message.
+
+Multiple message outputs are resolved in **right to left order**.
