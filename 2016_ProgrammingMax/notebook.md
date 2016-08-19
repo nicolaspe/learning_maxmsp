@@ -93,3 +93,6 @@ Multiple message outputs are resolved in **right to left order**. Max sees a tre
 - `float` stores a *floating point* value, working exactly like `int`
 - `loadbang` sends a *bang* as the patch is initialized. Useful to connect to message box to initialize values
 - `loadmess` same as `loadbang` but with the message embedded
+
+
+**Presentation Mode** add objects with `cmd + shift + p` and toggle it with `cmd + option + e`
