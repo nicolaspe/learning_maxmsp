@@ -97,5 +97,7 @@ Multiple message outputs are resolved in **right to left order**. Max sees a tre
 
 **Presentation Mode** add objects with `cmd + shift + p` and toggle it with `cmd + option + e`
 
-With *Jitter*, control flow it works exactly the same, but it streams *jit_matrix* (matrices) and it is more expensive to process.
-![alt text]()
+With *Jitter*, control flow it works exactly the same, but it streams *jit_matrix* (matrices) and it is more expensive to process. Max prioritizes MSP signal processing (it has the worst failure scenario), then it handles events, and -with the remaining processing power- it deals with Jitter video matrices.
+![alt text](https://github.com/nicolaspe/learning_maxmsp/blob/master/2016_ProgrammingMax/comp_limitations.png?raw=true "Performance and Limitations of three kinds of computation: Max/MSP/Jitter")
+
+>- `qmetro` is the same as `metro`, but whenever processing power is lacking, it does not send the bang in the defined time and waits for the best opportunity to do it
