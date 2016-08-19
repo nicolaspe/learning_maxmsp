@@ -73,9 +73,23 @@ Sound travels through air (or matter) as a difference of air *pressure*. When co
 - Multiplying (`*~`) two simple `cycle` signals = *ring modulation synthesis*
 - *Logic Events* only happen once and don't come in an specific moment (in relation with other objects, as with signals)
 - `methods` listen to the output of objects.
+- `notein` listens to MIDI inputs and `noteout` plays that note
 
 Max MSP detects logical loops and just "discards them" > *stack overflow*. It can be seen as a directed graph*, has to be an Acyclic Directed Graph, which uses topological sorting to order it. Every time a new patch cord is added, MSP has to take a moment to reorder the patch to play it in the correct sequence.
 
 Objects' output is used immediately (like with a `select` object) or can schedule an event in time (`makenote` or `metro` objects) by giving a message to the *Max Scheduler*. If it schedules something in time, it will complete it's "mission" before receiving a new message.
 
-Multiple message outputs are resolved in **right to left order**.
+Multiple message outputs are resolved in **right to left order**. Max sees a tree of connections and follows the branches to execute them (a.k.a. depth-first search). This can be explained with the MIDI `notein/out` objects. The first two inlets are MIDI channel and velocity and are blue colored (cold inputs). The last one is the MIDI key value, and is a red colored input (hot), as it is the last one needed to be able to play a note. For a better order and understanding of the patch, it is better to use a `trigger` with `bangs` in order, so the visual layout does not alter the behavior of the patch.
+
+>(New) control flow objects
+- `gate` is open or closed (with a *trigger* or *bang*), and the right input is the hot one and is what's trying to pass through it
+- `onebang` gates only the first bang and drives the following ones to the right outlet. A bang on the right inlet resets it
+- `metro` outputs a *bang* every X milliseconds
+- `tempo` outputs a *bang* controllable in *bpm*
+- `delay` delays bangs in X milliseconds. New bangs override the previous ones. Can prevent the output with a `stop` *message*
+- `pipe` is a delay that allows multiple inputs to be delayed (not only bangs!)
+- `uzi` bangs repeatedly, can output a finished bang and keeps the current bang index. Starts counting from 1
+- `int` stores an *integer* value. Remembers the input until a bang comes in (right inlet is cold, left is hot, as per usual)
+- `float` stores a *floating point* value, working exactly like `int`
+- `loadbang` sends a *bang* as the patch is initialized. Useful to connect to message box to initialize values
+- `loadmess` same as `loadbang` but with the message embedded
