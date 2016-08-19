@@ -96,3 +96,6 @@ Multiple message outputs are resolved in **right to left order**. Max sees a tre
 
 
 **Presentation Mode** add objects with `cmd + shift + p` and toggle it with `cmd + option + e`
+
+With *Jitter*, control flow it works exactly the same, but it streams *jit_matrix* (matrices) and it is more expensive to process.
+![alt text]()
